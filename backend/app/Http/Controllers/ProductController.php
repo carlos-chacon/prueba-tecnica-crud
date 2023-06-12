@@ -8,9 +8,11 @@ use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
+    private $numberPage = 10;
+
     public function index()
     {
-        $products = Product::paginate(10);
+        $products = Product::paginate($this->numberPage);
         return response()->json($products);
     }
 
