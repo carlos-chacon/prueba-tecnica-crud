@@ -1,10 +1,8 @@
 # Prueba práctica php
 
-_Realizar un microservicio que consulte la humedad de las ciudades Miami,
-Orlando y New York. Para esto se debe crear un sitio web donde se muestre
-por medio de un mapa el resultado del microservicio, adicionalmente se
-debe almacenar en un historial que se pueda consultar a través de un link
-en la página._
+_Prueba PHP Laravel_
+1. Desarrollar un crud; Consumiendo un ApiRest (cualquiera).
+2. Crear un servicio web y consumirlo con Js (Vuejs o ReactJs).
 
 ## Comenzando 🚀
 
@@ -13,21 +11,20 @@ _Estas instrucciones te permitirán obtener una copia del proyecto en funcionami
 _Puedes empezar clonando el proyecto con el siguiente comando._
 
 ```
-git clone https://github.com/carlos-chacon/prueba-tecnica-php.git
+git clone https://github.com/carlos-chacon/prueba-tecnica-crud.git
 ```
 
 ```
-cd prueba-tecnica-php/
+cd prueba-tecnica-crud/
 ```
 
-_Esta aplicación esta construida, en el backend con php (Laravel Lumen) y en el frontend con Angular_
+_Esta aplicación esta construida, en el backend con php (Laravel Lumen) y en el frontend con Vue.js_
 
 
 ## Pre-requisitos 📋
 
 - [Docker](https://www.docker.com/)
 - [Node.js](https://nodejs.org/en/download/)
-- [Angular CLI](https://angular.io/cli/)
 
 
 ## Instalación 🔧
@@ -37,10 +34,10 @@ _Para la instalación del proyecto y después de haber clonado el repositorio se
 ### Backend php
 #### Usando Contenedor Docker:
 
-- _Nos ubicamos en el directorio backend/docker_
+- _Nos ubicamos en el directorio backend_
 
 ```bash
-cd backend/docker/
+cd backend
 ```
 
 - _Creamos una copia del archivos de variables docker_
@@ -52,7 +49,7 @@ cp .env.example .env
 - _Poner en marcha los contenedor docker. Se levantaran los contenedores php, nginx y el espacio de trabajo donde esta el código php_
 
 ```sh
-docker-compose up -d nginx mysql
+docker-compose up -d
 ```
 
 #### Instalación y configuración proyecto php (Laravel Lumen):
@@ -60,13 +57,11 @@ docker-compose up -d nginx mysql
 - _Estando en el directorio backend/docker/ ejecutamos los siguiente comandos:_
 
 ```sh
-docker-compose exec workspace bash
+docker exec -it app_crud sh
 ```
 
 - _Dentro del shell, ejecutamos los siguientes comandos:_
-```sh
-cp .env.example .env
-```
+
 ```sh
 composer install
 ```
@@ -77,25 +72,21 @@ php artisan migrate
 exit
 ```
 
-- _Después de realizar los pasos anterior los servicios (php) quedan expuestos en **http://localhost** ._
-    _Existen dos servicios:_
-    1. _Obtener la humedad de una ciudad por medio de las coordenadas (latitud, longitud): **http://localhost/api/v1/ciudades/obtener-humedad/{lat}/{long}**_
-    2. _Mostrar el historial de consultas de humedad por ciudad: **http://localhost/api/v1/ciudades/weather-log?page={numPage}&q={textoBuscar}**_
+- _Después de realizar los pasos anterior los servicios (php) quedan expuestos en **http://localhost:8080/** ._
+    _Existen cinco servicios (CRUD de productos):_
+    1. _Obtener el listado de todo los productos (GET): **http://localhost:8080/api/products?page={numPage}&q={textoBuscar}**_
+    2. _Obtener un producto (GET): **http://localhost:8080/api/products/{id}**_
+    3. _Crear un producto (POST): **http://localhost:8080/api/products**_
+    4. _Actualizar un producto (PUT): **http://localhost:8080/api/products/{id}**_
+    5. _Borrar un producto (DELETE): **http://localhost:8080/api/products/{id}**_
 
 
-_Nota: para el servicio "obtener humedad" se utiliza la api **https://openweathermap.org/api/one-call-3**, de debe colocar la api key en el archivo .env que esta en el directorio backend._
-```sh
-...
-
-API_KEY_OPEN_WEATHER_MAP=
-```
-
-### Frontend Angular
+### Frontend Vue.js
 
 _Nos ubicamos en el directorio frontend de la raíz del proyecto, y ejecutamos los siguientes comandos:_
 
 ```sh
-cd ../..
+cd ..
 ```
 ```sh
 cd frontend/
@@ -104,16 +95,17 @@ cd frontend/
 npm install
 ```
 
+_Comando para ejecutar el frontend en modo desarrollo:_
 ```sh
-ng s --port=4201
+npm run dev
 ```
 
-_El sitio web queda expuesto en **http://localhost:4201**_
+_El sitio web queda expuesto en **http://127.0.0.1:5173/**_
 
 ## Construido con 🛠️
 
 * [Laravel Lumen](https://lumen.laravel.com/) - Framework php
-* [Angular](https://maven.apache.org/) - Framework Javascript
+* [Vue.js](https://vuejs.org/) - Framework Javascript
 * [Docker](https://www.docker.com/)
 
 ## Autor ✒️
