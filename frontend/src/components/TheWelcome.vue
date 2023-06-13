@@ -83,4 +83,9 @@ import SupportIcon from './icons/IconSupport.vue'
     us by
     <a href="https://vuejs.org/sponsor/" target="_blank" rel="noopener">becoming a sponsor</a>.
   </WelcomeItem>
+
+  <h1 class="text-3xl font-bold underline">
+    Hello world!
+  </h1>
+  
 </template>

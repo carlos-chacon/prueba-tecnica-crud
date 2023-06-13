@@ -12,8 +12,25 @@ class ProductController extends Controller
 
     public function index()
     {
-        $products = Product::paginate($this->numberPage);
-        return response()->json($products);
+
+        $q = request()->has('q') ? request()->get('q') : null;
+
+        $products = Product::query();
+
+        if ($q) {
+            $products->where(function ($query) use ($q) {
+                $query->where('name', 'like', "%{$q}%")
+                    ->orWhere('description', 'like', "%{$q}%")
+                    ->orWhere('category', 'like', "%{$q}%")
+                    ->orWhere('brand', 'like', "%{$q}%")
+                    ->orWhere('created_at', 'like', "%{$q}%");
+            });
+        }
+
+        $products->orderBy('created_at', 'desc');
+        $resp = $products->paginate($this->numberPage);
+
+        return response()->json($resp);
     }
 
     public function store(Request $request)
