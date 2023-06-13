@@ -1,4 +1,4 @@
-import type { ProductsList } from "@/modules/products/types";
+import type { Product, ProductsList } from "@/modules/products/types";
 import {API_URL} from "../common/constants";
 
 const endPoint = 'products';
@@ -7,6 +7,17 @@ export default {
     async getProducts(numberPage: number | string | null, q?: string): Promise<ProductsList> {
       try {
         const response = await fetch(`${API_URL}/${endPoint}/?page=${numberPage}&q=${q}`);
+        const data = await response.json();
+        return data;
+      } catch (error) {
+        console.error('Error al obtener los productos:', error);
+        throw error;
+      }
+    },
+
+    async getProduct(id: string | any): Promise<Product> {
+      try {
+        const response = await fetch(`${API_URL}/${endPoint}/${id}`);
         const data = await response.json();
         return data;
       } catch (error) {

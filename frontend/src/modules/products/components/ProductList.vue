@@ -4,7 +4,7 @@ import ProductService from '../../../services/ProductService'
 import type { ResponseProducts, LinkPage } from '../types'
 
 const products: Ref<any> = ref(null)
-const q = ref()
+const q = ref('')
 const numberPage = ref<number | string | null>(1)
 
 watchEffect(async () => {
@@ -32,26 +32,105 @@ const goToPageUrl = (url: string) => {
 </script>
 
 <template>
+  <RouterLink :to="{ name: 'product-new' }"
+    class="rounded-full relative inline-flex items-center px-4 py-2 text-sm font-semibold ring-1 ring-inset ring-gray-300 focus:z-20 focus:outline-offset-0 cursor-pointer z-10 bg-indigo-600 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 hover:bg-indigo-700"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke-width="1.5"
+      stroke="currentColor"
+      class="w-6 h-6"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
+      />
+    </svg>
+    Nuevo
+  </RouterLink>
+
   <div class="overflow-x-auto">
-    <table class="min-w-full divide-y divide-gray-200">
+    <table class="min-w-full divide-y divide-gray-200" :class="{ 'animate-pulse': !products }">
       <thead>
         <tr>
           <th class="py-3 px-6 text-left">Nombre</th>
-          <th class="py-3 px-6 text-left">Correo Electrónico</th>
-          <th class="py-3 px-6 text-left">Rol</th>
-          <th class="py-3 px-6 text-left">Acciones</th>
+          <th class="py-3 px-6 text-left">Descripción</th>
+          <th class="py-3 px-6 text-left">Precio</th>
+          <th class="py-3 px-6 text-left">Cantidad</th>
+          <th class="py-3 px-6 text-left">Categoría</th>
+          <th class="py-3 px-6 text-left">Marca</th>
+          <th class="py-3 px-6 text-left">Destacado</th>
+          <th class="py-3 px-6 text-left">En oferta</th>
+          <th class="py-3 px-6 text-left">Fecha Creación</th>
+          <th class="py-3 px-6 text-left">Fecha Actualización</th>
+          <th>Acción</th>
         </tr>
       </thead>
       <tbody>
-        <tr class="bg-white">
-          <td class="py-4 px-6 border-b border-gray-200">John Doe</td>
-          <td class="py-4 px-6 border-b border-gray-200">johndoe@example.com</td>
-          <td class="py-4 px-6 border-b border-gray-200">Admin</td>
-          <td class="py-4 px-6 border-b border-gray-200">
-            <!-- Acciones -->
-          </td>
-        </tr>
-        <!-- Resto de filas -->
+        <template v-if="products">
+          <tr class="bg-white" v-for="product in products.data" :key="product.id">
+            <td class="py-4 px-6 border-b border-gray-200">{{ product.name }}</td>
+            <td class="py-4 px-6 border-b border-gray-200">{{ product.description }}</td>
+            <td class="py-4 px-6 border-b border-gray-200">{{ product.price }}</td>
+            <td class="py-4 px-6 border-b border-gray-200">{{ product.quantity }}</td>
+            <td class="py-4 px-6 border-b border-gray-200">{{ product.category }}</td>
+            <td class="py-4 px-6 border-b border-gray-200">{{ product.brand }}</td>
+            <td class="py-4 px-6 border-b border-gray-200">{{ product.featured ? 'Si' : 'No' }}</td>
+            <td class="py-4 px-6 border-b border-gray-200">{{ product.on_sale ? 'Si' : 'No' }}</td>
+            <td class="py-4 px-6 border-b border-gray-200">{{ product.created_at }}</td>
+            <td class="py-4 px-6 border-b border-gray-200">{{ product.updated_at }}</td>
+            <td class="py-4 px-6 border-b border-gray-200">
+              <div class="flex">
+                <RouterLink :to="{ name: 'product-edit', params: { id: product.id } }"
+                  type="button"
+                  class="text-white bg-sky-700 hover:bg-sky-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center mr-2 dark:bg-sky-600 dark:hover:bg-sky-700 dark:focus:ring-blue-800"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="w-6 h-6"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"
+                    />
+                  </svg>
+
+                  <span class="sr-only">Editar</span>
+                </RouterLink>
+
+                <button
+                  type="button"
+                  class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center mr-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-blue-800"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="w-6 h-6"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
+                    />
+                  </svg>
+
+                  <span class="sr-only">Borrar</span>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </template>
       </tbody>
     </table>
   </div>
@@ -92,22 +171,29 @@ const goToPageUrl = (url: string) => {
         <nav class="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
           <div
             class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 focus:z-20 focus:outline-offset-0 cursor-pointer"
-            v-for="(link, index) in products.links" :key="index"
+            v-for="(link, index) in products.links"
+            :key="index"
             @click="goToPage(link)"
-            :class="{'z-10 bg-indigo-600 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600': link.active, 'hover:bg-gray-50': !link.active}"
+            :class="{
+              'z-10 bg-indigo-600 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600':
+                link.active,
+              'hover:bg-gray-50': !link.active
+            }"
           >
-             <div v-if="index === 0">
-               <span class="sr-only">Anterior</span>
-               <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                 <path
-                   fill-rule="evenodd"
-                   d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z"
-                   clip-rule="evenodd"
-                 />
-               </svg>
-             </div>
+            <div v-if="index === 0">
+              <span class="sr-only">Anterior</span>
+              <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <path
+                  fill-rule="evenodd"
+                  d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+            </div>
 
-            <span v-if="!(index === 0) && !(index === products.links.length - 1)">{{ link.label }}</span>
+            <span v-if="!(index === 0) && !(index === products.links.length - 1)">{{
+              link.label
+            }}</span>
 
             <div v-if="index === products.links.length - 1">
               <span class="sr-only">Siguiente</span>
