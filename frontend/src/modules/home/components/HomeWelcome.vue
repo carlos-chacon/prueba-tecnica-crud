@@ -9,6 +9,7 @@
         <div class="mb-5 mt-5">
             <h3 class="text-center mb-2 text-lg font-semibold text-gray-900">Funcionalidad del proyecto</h3>
             <ul class="space-y-1 text-gray-900 list-disc list-inside dark:text-gray-400 w-60">
+                <li>Creación de api rest de productos y consumo de los servicios desde vue.js</li>
                 <li>Modulo o pantalla de producto. (Ver menu superior)</li>
                 <li>En el modulo o pantalla de productos esta las opciones para:
                     <ul class="list-disc list-inside pl-10">
