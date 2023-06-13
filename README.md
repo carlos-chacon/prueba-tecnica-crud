@@ -40,7 +40,7 @@ _Para la instalación del proyecto y después de haber clonado el repositorio se
 cd backend
 ```
 
-- _Creamos una copia del archivos de variables docker_
+- _Creamos una copia del archivos de variables Laravel_
 
 ```sh
 cp .env.example .env
