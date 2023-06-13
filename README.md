@@ -54,7 +54,7 @@ docker-compose up -d
 
 #### Instalación y configuración proyecto php (Laravel Lumen):
 
-- _Estando en el directorio backend/docker/ ejecutamos los siguiente comandos:_
+- _Estando en el directorio backend ejecutamos los siguiente comandos:_
 
 ```sh
 docker exec -it app_crud sh
