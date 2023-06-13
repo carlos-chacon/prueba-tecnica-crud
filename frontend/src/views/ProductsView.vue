@@ -3,7 +3,7 @@ import { headerStore } from '../store/HeaderStore';
 import ProductList from '../modules/products/components/ProductList.vue';
 
 headerStore.title = 'Productos';
-headerStore.description = 'Crud de productos tienda virtual'
+headerStore.description = 'Listados de productos.'
 
 </script>
 <template>

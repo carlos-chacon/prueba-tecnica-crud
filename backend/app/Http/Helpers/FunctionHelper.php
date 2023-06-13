@@ -21,7 +21,7 @@ class FunctionHelper {
         created_at: Fecha de creación del producto.
         updated_at: Fecha de última actualización del producto.
      *
-     * @return void
+     * @return []
      */
     public static function requestValidationProduct(){
         return [
@@ -31,10 +31,10 @@ class FunctionHelper {
             "quantity" => "required|integer",
             "image" => "nullable|url|max:500",
             "category" => "required|max:120",
-            "brand" => "required|max:120",
+            "brand" => "nullable|max:120",
             "sku" => "nullable|max:500",
             "weight" => "nullable|max:100",
-            "dimensions" => "required|max:100",
+            "dimensions" => "nullable|max:100",
             "featured" => "nullable|boolean",
             "on_sale" => "nullable|boolean",
         ];

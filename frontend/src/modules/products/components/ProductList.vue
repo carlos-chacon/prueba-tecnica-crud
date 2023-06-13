@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { ref, watchEffect, type Ref } from 'vue'
 import ProductService from '../../../services/ProductService'
-import type { ResponseProducts, LinkPage } from '../types'
+import type { LinkPage, Product } from '../types'
+import Swal from 'sweetalert2'
 
 const products: Ref<any> = ref(null)
 const q = ref('')
@@ -29,11 +30,28 @@ const goToPageUrl = (url: string) => {
   }
   goToPage(data)
 }
+
+const deleteProduct = async (product: Product) => {
+  Swal.fire({
+    title: `Desea eliminar este producto: ${product.name}`,
+    showCancelButton: true,
+    showLoaderOnConfirm: true,
+    confirmButtonText: 'OK',
+    preConfirm: async () => {
+      const deleteProduct = await ProductService.deleteProduct(product.id)
+      if (deleteProduct) {
+        products.value.data = products.value.data.filter((item: Product) => item.id !== product.id)
+      }
+      return deleteProduct
+    }
+  })
+}
 </script>
 
 <template>
-  <RouterLink :to="{ name: 'product-new' }"
-    class="rounded-full relative inline-flex items-center px-4 py-2 text-sm font-semibold ring-1 ring-inset ring-gray-300 focus:z-20 focus:outline-offset-0 cursor-pointer z-10 bg-indigo-600 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 hover:bg-indigo-700"
+  <RouterLink
+    :to="{ name: 'product-new' }"
+    class="rounded-full relative inline-flex items-center px-4 py-2 text-sm font-semibold ring-1 ring-inset ring-gray-300 focus:z-20 focus:outline-offset-0 cursor-pointer z-10 bg-indigo-600 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 hover:bg-indigo-700 mb-3"
   >
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -52,10 +70,61 @@ const goToPageUrl = (url: string) => {
     Nuevo
   </RouterLink>
 
+  <form class="flex items-center mb-4">
+    <label for="simple-search" class="sr-only">Search</label>
+    <div class="relative w-full">
+      <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+        <svg
+          aria-hidden="true"
+          class="w-5 h-5 text-gray-500 dark:text-gray-400"
+          fill="currentColor"
+          viewBox="0 0 20 20"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+            clip-rule="evenodd"
+          ></path>
+        </svg>
+      </div>
+      <input
+        autocomplete="off"
+        v-model="q"
+        type="text"
+        id="simple-search"
+        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        placeholder="Buscar ..."
+        required
+      />
+    </div>
+    <button
+      type="submit"
+      class="p-2.5 ml-2 text-sm font-medium text-white bg-blue-700 rounded-lg border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+    >
+      <svg
+        class="w-5 h-5"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+        ></path>
+      </svg>
+      <span class="sr-only">Search</span>
+    </button>
+  </form>
+
   <div class="overflow-x-auto">
     <table class="min-w-full divide-y divide-gray-200" :class="{ 'animate-pulse': !products }">
       <thead>
         <tr>
+          <th>Acción</th>
           <th class="py-3 px-6 text-left">Nombre</th>
           <th class="py-3 px-6 text-left">Descripción</th>
           <th class="py-3 px-6 text-left">Precio</th>
@@ -66,25 +135,15 @@ const goToPageUrl = (url: string) => {
           <th class="py-3 px-6 text-left">En oferta</th>
           <th class="py-3 px-6 text-left">Fecha Creación</th>
           <th class="py-3 px-6 text-left">Fecha Actualización</th>
-          <th>Acción</th>
         </tr>
       </thead>
       <tbody>
         <template v-if="products">
           <tr class="bg-white" v-for="product in products.data" :key="product.id">
-            <td class="py-4 px-6 border-b border-gray-200">{{ product.name }}</td>
-            <td class="py-4 px-6 border-b border-gray-200">{{ product.description }}</td>
-            <td class="py-4 px-6 border-b border-gray-200">{{ product.price }}</td>
-            <td class="py-4 px-6 border-b border-gray-200">{{ product.quantity }}</td>
-            <td class="py-4 px-6 border-b border-gray-200">{{ product.category }}</td>
-            <td class="py-4 px-6 border-b border-gray-200">{{ product.brand }}</td>
-            <td class="py-4 px-6 border-b border-gray-200">{{ product.featured ? 'Si' : 'No' }}</td>
-            <td class="py-4 px-6 border-b border-gray-200">{{ product.on_sale ? 'Si' : 'No' }}</td>
-            <td class="py-4 px-6 border-b border-gray-200">{{ product.created_at }}</td>
-            <td class="py-4 px-6 border-b border-gray-200">{{ product.updated_at }}</td>
             <td class="py-4 px-6 border-b border-gray-200">
               <div class="flex">
-                <RouterLink :to="{ name: 'product-edit', params: { id: product.id } }"
+                <RouterLink
+                  :to="{ name: 'product-edit', params: { id: product.id } }"
                   type="button"
                   class="text-white bg-sky-700 hover:bg-sky-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center mr-2 dark:bg-sky-600 dark:hover:bg-sky-700 dark:focus:ring-blue-800"
                 >
@@ -107,6 +166,7 @@ const goToPageUrl = (url: string) => {
                 </RouterLink>
 
                 <button
+                  @click="deleteProduct(product)"
                   type="button"
                   class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center mr-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-blue-800"
                 >
@@ -129,6 +189,16 @@ const goToPageUrl = (url: string) => {
                 </button>
               </div>
             </td>
+            <td class="py-4 px-6 border-b border-gray-200">{{ product.name }}</td>
+            <td class="py-4 px-6 border-b border-gray-200">{{ product.description }}</td>
+            <td class="py-4 px-6 border-b border-gray-200">{{ product.price }}</td>
+            <td class="py-4 px-6 border-b border-gray-200">{{ product.quantity }}</td>
+            <td class="py-4 px-6 border-b border-gray-200">{{ product.category }}</td>
+            <td class="py-4 px-6 border-b border-gray-200">{{ product.brand }}</td>
+            <td class="py-4 px-6 border-b border-gray-200">{{ product.featured ? 'Si' : 'No' }}</td>
+            <td class="py-4 px-6 border-b border-gray-200">{{ product.on_sale ? 'Si' : 'No' }}</td>
+            <td class="py-4 px-6 border-b border-gray-200">{{ product.created_at }}</td>
+            <td class="py-4 px-6 border-b border-gray-200">{{ product.updated_at }}</td>
           </tr>
         </template>
       </tbody>
